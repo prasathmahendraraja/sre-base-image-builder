@@ -1,6 +1,3 @@
-# docker build --tag=mahenp5/alpine-node-git:16 .
-
-
 #!/bin/bash
 
 # Accept Node.js version as an argument

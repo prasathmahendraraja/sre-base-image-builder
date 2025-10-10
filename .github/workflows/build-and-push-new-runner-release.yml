@@ -6,15 +6,11 @@ on:
       - main
     types:
       - closed
-    paths:
-      - alpine-node/**
-      - alpine-node-git/**
   workflow_dispatch:
-
 
 jobs:
   build:
-    if: github.event.pull_request.merged == true # Ensure the PR was merged or it's a push event
+    if: github.event.pull_request.merged == true
     runs-on: [sre-runner]
     steps:
       - uses: actions/checkout@v3
