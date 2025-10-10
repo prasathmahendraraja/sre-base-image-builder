@@ -1,13 +1,9 @@
 name: Build and Push New Runner Release
 
 on:
-  push:
-    paths:
-      - alpine-node/**
-      - alpine-node-git/**
   pull_request:
     branches:
-      - master
+      - main
     types:
       - closed
     paths:
