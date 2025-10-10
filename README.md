@@ -1,1 +1,0 @@
-# sre-base-image-builder
