@@ -7,5 +7,6 @@ if [ -z "$1" ]; then
 fi
 NODE_VERSION=$1
 
+
 # Build the Docker image with the specified Node.js version
 docker build --build-arg NODE_VERSION=$NODE_VERSION -t mahenp5/alpine-node:$NODE_VERSION .
