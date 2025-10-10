@@ -1,0 +1,58 @@
+name: Build and Push New Runner Release
+
+on:
+  push:
+    paths:
+      - alpine-node/**
+      - alpine-node-git/**
+  pull_request:
+    branches:
+      - master
+    types:
+      - closed
+    paths:
+      - alpine-node/**
+      - alpine-node-git/**
+  workflow_dispatch:
+
+
+jobs:
+  build:
+    if: github.event.pull_request.merged == true # Ensure the PR was merged or it's a push event
+    runs-on: [sre-runner]
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Alpine Node 16 Image
+        if: contains(github.event.pull_request.changed_files, 'alpine-node/')
+        run: |
+          cd alpine-node
+          NODE_VERSION=16 sh build.sh
+          docker push mahenp5/alpine-node:16
+          
+      - name: Build Alpine Node 24 Image
+        if: contains(github.event.pull_request.changed_files, 'alpine-node/')
+        run: |
+          cd alpine-node
+          NODE_VERSION=24 sh build.sh
+          docker push mahenp5/alpine-node:24
+
+      - name: Build Alpine Node Git 16 Image
+        if: contains(github.event.pull_request.changed_files, 'alpine-node-git/')
+        run: |
+          cd alpine-node-git
+          NODE_VERSION=16 sh build.sh
+          docker push mahenp5/alpine-node-git:16
+
+      - name: Build Alpine Node Git 24 Image
+        if: contains(github.event.pull_request.changed_files, 'alpine-node-git/')
+        run: |
+          cd alpine-node-git
+          NODE_VERSION=24 sh build.sh
+          docker push mahenp5/alpine-node-git:24
