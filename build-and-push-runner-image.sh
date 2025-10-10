@@ -23,6 +23,6 @@ echo "Building new runner image for .tar.gz release <${RUNNER_VERSION}>!"
 # + update the :latest tag (so we can just pull that for all subsequent redeploys)
 docker buildx build --platform linux/amd64 \
   --build-arg RUNNER_VERSION="$RUNNER_VERSION" \
-  -t fcabrera01/actions-image:latest \
-  -t fcabrera01/actions-image:v${RUNNER_VERSION} \
+  -t mahenp5/actions-image:latest \
+  -t mahenp5/actions-image:v${RUNNER_VERSION} \
   --push .
