@@ -2,10 +2,9 @@ name: Build and Push New Runner Release
 
 on:
   pull_request:
+    types: [closed]
     branches:
       - main
-    types:
-      - closed
   workflow_dispatch:
 
 jobs:
@@ -22,28 +21,28 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Alpine Node 16 Image
-        if: contains(github.event.pull_request.changed_files, 'alpine-node/')
+        if: contains(github.event.pull_request.changed_files, 'alpine-node')
         run: |
           cd alpine-node
           NODE_VERSION=16 sh build.sh
           docker push mahenp5/alpine-node:16
           
       - name: Build Alpine Node 24 Image
-        if: contains(github.event.pull_request.changed_files, 'alpine-node/')
+        if: contains(github.event.pull_request.changed_files, 'alpine-node')
         run: |
           cd alpine-node
           NODE_VERSION=24 sh build.sh
           docker push mahenp5/alpine-node:24
 
       - name: Build Alpine Node Git 16 Image
-        if: contains(github.event.pull_request.changed_files, 'alpine-node-git/')
+        if: contains(github.event.pull_request.changed_files, 'alpine-node-git')
         run: |
           cd alpine-node-git
           NODE_VERSION=16 sh build.sh
           docker push mahenp5/alpine-node-git:16
 
       - name: Build Alpine Node Git 24 Image
-        if: contains(github.event.pull_request.changed_files, 'alpine-node-git/')
+        if: contains(github.event.pull_request.changed_files, 'alpine-node-git')
         run: |
           cd alpine-node-git
           NODE_VERSION=24 sh build.sh
