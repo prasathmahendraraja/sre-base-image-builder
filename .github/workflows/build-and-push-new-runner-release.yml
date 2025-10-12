@@ -30,7 +30,7 @@ jobs:
           cd alpine-node
           for NODE_VERSION in 16 24; do
             sh build.sh $NODE_VERSION
-            docker push mahenp5/alpine-node:$NODE_VERSION
+            docker push prasathmahendraraja/alpine-node:$NODE_VERSION
           done
 
 
@@ -40,5 +40,5 @@ jobs:
           cd alpine-node-git
           for NODE_VERSION in 16 24; do
             sh build.sh $NODE_VERSION
-            docker push mahenp5/alpine-node-git:$NODE_VERSION
+            docker push prasathmahendraraja/alpine-node-git:$NODE_VERSION
           done
