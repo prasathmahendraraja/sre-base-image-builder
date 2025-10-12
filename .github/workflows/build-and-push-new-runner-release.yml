@@ -24,30 +24,21 @@ jobs:
         id: changes
         uses: tj-actions/changed-files@v44
       
-      - name: Build Alpine Node 16 Image
+      - name: Build and Push Alpine Node Images
         if: contains(steps.changes.outputs.all_changed_files, 'alpine-node')
         run: |
           cd alpine-node
-          NODE_VERSION=16 sh build.sh
-          docker push mahenp5/alpine-node:16
-          
-      - name: Build Alpine Node 24 Image
-        if: contains(steps.changes.outputs.all_changed_files, 'alpine-node')
-        run: |
-          cd alpine-node
-          NODE_VERSION=24 sh build.sh
-          docker push mahenp5/alpine-node:24
+          for NODE_VERSION in 16 24; do
+            sh build.sh $NODE_VERSION
+            docker push mahenp5/alpine-node:$NODE_VERSION
+          done
 
-      - name: Build Alpine Node Git 16 Image
-        if: contains(github.event.pull_request.changed_files, 'alpine-node-git')
+
+      - name: Build and Push Alpine Node Git Images
+        if: contains(steps.changes.outputs.all_changed_files, 'alpine-node-git')
         run: |
           cd alpine-node-git
-          NODE_VERSION=16 sh build.sh
-          docker push mahenp5/alpine-node-git:16
-
-      - name: Build Alpine Node Git 24 Image
-        if: contains(github.event.pull_request.changed_files, 'alpine-node-git')
-        run: |
-          cd alpine-node-git
-          NODE_VERSION=24 sh build.sh
-          docker push mahenp5/alpine-node-git:24
+          for NODE_VERSION in 16 24; do
+            sh build.sh $NODE_VERSION
+            docker push mahenp5/alpine-node-git:$NODE_VERSION
+          done
