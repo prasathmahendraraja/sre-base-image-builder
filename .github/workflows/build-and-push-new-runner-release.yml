@@ -20,15 +20,19 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Get changed files
+        id: changes
+        uses: tj-actions/changed-files@v44
+      
       - name: Build Alpine Node 16 Image
-        if: contains(github.event.pull_request.changed_files, 'alpine-node')
+        if: contains(steps.changes.outputs.all_changed_files, 'alpine-node')
         run: |
           cd alpine-node
           NODE_VERSION=16 sh build.sh
           docker push mahenp5/alpine-node:16
           
       - name: Build Alpine Node 24 Image
-        if: contains(github.event.pull_request.changed_files, 'alpine-node')
+        if: contains(steps.changes.outputs.all_changed_files, 'alpine-node')
         run: |
           cd alpine-node
           NODE_VERSION=24 sh build.sh
