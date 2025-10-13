@@ -1,3 +1,5 @@
+ARG NODE_VERSION
+
 FROM prasathmahendraraja/alpine-node:${NODE_VERSION}
 
 RUN apk --update add \
