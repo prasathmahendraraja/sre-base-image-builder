@@ -33,7 +33,6 @@ jobs:
             docker push prasathmahendraraja/alpine-node:$NODE_VERSION
           done
 
-
       - name: Build and Push Alpine Node Git Images
         if: contains(steps.changes.outputs.all_changed_files, 'alpine-node-git')
         run: |
@@ -41,4 +40,13 @@ jobs:
           for NODE_VERSION in 16 24; do
             sh build.sh $NODE_VERSION
             docker push prasathmahendraraja/alpine-node-git:$NODE_VERSION
+          done
+
+      - name: Build and Push Perfhawk UX Base Image
+        if: contains(steps.changes.outputs.all_changed_files, 'perfhawk-ux')
+        run: |
+          cd alpine-node-git
+          for NODE_VERSION in 16 24; do
+            sh build.sh $NODE_VERSION
+            docker push prasathmahendraraja/node:$NODE_VERSION-alpine-python3-sqlite3-chromedriver-git
           done
