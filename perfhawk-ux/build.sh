@@ -6,6 +6,6 @@ if [ -z "$1" ]; then
   exit 1
 fi
 NODE_VERSION=$1
-
+ 
 # Build the Docker image with the specified Node.js version
 docker build --build-arg NODE_VERSION=$NODE_VERSION -t prasathmahendraraja/node:$NODE_VERSION-alpine-python3-sqlite3-chromedriver-git .
