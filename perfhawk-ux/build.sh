@@ -2,7 +2,7 @@
 
 # Accept Node.js version as an argument 
 if [ -z "$1" ]; then
-  echo "Node.js version is required."
+  echo "Node.js version is required." 
   exit 1
 fi
 NODE_VERSION=$1
