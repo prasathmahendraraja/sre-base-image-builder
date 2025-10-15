@@ -1,7 +1,7 @@
 ARG NODE_VERSION
 
 # Base image containing node v24
-FROM prasathmahendraraja/node:${NODE_VERSION}-alpine
+FROM prasathmahendraraja/alpine-node:${NODE_VERSION}
 
 # Run as root user
 USER root
