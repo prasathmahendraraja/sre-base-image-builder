@@ -24,7 +24,7 @@ jobs:
         id: changes
         uses: tj-actions/changed-files@v44
       
-      - name: Build and Push Alpine Node Images
+      - name: Build and Push Alpine-Node Images
         if: contains(steps.changes.outputs.all_changed_files, 'alpine-node')
         run: |
           cd alpine-node
@@ -33,7 +33,7 @@ jobs:
             docker push prasathmahendraraja/alpine-node:$NODE_VERSION
           done
 
-      - name: Build and Push Alpine Node Git Images
+      - name: Build and Push Alpine-Node-Git Images
         if: contains(steps.changes.outputs.all_changed_files, 'alpine-node-git')
         run: |
           cd alpine-node-git
@@ -42,10 +42,10 @@ jobs:
             docker push prasathmahendraraja/alpine-node-git:$NODE_VERSION
           done
 
-      - name: Build and Push Perfhawk UX Base Image
+      - name: Build and Push Perfhawk-UX Base Image
         if: contains(steps.changes.outputs.all_changed_files, 'perfhawk-ux')
         run: |
-          cd alpine-node-git
+          cd perfhawk-ux
           for NODE_VERSION in 16 24; do
             sh build.sh $NODE_VERSION
             docker push prasathmahendraraja/node:$NODE_VERSION-alpine-python3-sqlite3-chromedriver-git
