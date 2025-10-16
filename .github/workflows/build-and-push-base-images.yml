@@ -41,6 +41,15 @@ jobs:
             sh build.sh $NODE_VERSION
             docker push prasathmahendraraja/alpine-node-git:$NODE_VERSION
           done
+      
+      - name: Build and Push Alpine-Node-Java Base Image
+        # if: contains(steps.changes.outputs.all_changed_files, 'alpine-node-java')
+        run: |
+          cd alpine-node-java
+          for NODE_VERSION in 16 24; do
+            sh build.sh $NODE_VERSION
+            docker push prasathmahendraraja/alpine-node-java:$NODE_VERSION
+          done
 
       - name: Build and Push Node-alpine-python3-sqlite3-chromedriver-git Base Image
         # if: contains(steps.changes.outputs.all_changed_files, 'node-alpine-python3-sqlite3-chromedriver-git')
