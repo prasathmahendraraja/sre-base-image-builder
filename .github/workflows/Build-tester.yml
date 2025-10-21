@@ -1,0 +1,106 @@
+name: Build Base Images
+
+on:
+  workflow_dispatch:
+    inputs:
+      rebuild:
+        description: 'Rebuild Base Images'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  dispatch_and_poll:
+    runs-on: [SRE-Runner]
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Login to DockerHub
+        run: |
+          #!/bin/sh
+
+          # Set Source Docker registry and credentials
+          export DOCKERHUB_REGISTRY="dockerhub.registry.td.com"
+        #   export STAGING_REGISTRY="staging.registry.td.com"
+
+          # Note this uses NPID
+          export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
+          export DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}
+
+          # Login to both dockerhub and staging registry
+          echo "$DOCKER_PASSWORD" | docker login "$DOCKERHUB_REGISTRY" -u "$DOCKER_USERNAME" --password-stdin
+        #   echo "$DOCKER_PASSWORD" | docker login "$STAGING_REGISTRY" -u "$DOCKER_USERNAME" --password-stdin
+
+      - name: Dispatch Public Github Workflow for Building Base Images
+        id: dispatch_workflow
+        if: ${{ github.event.inputs.rebuild == 'true' }}
+        run: |
+          response=$(curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: Bearer ${{ secrets.DOCKER_PASSWORD }}" \
+            --insecure \
+            https://api.github.com/repos/prasathmahendraraja/sre-base-image-builder/actions/workflows/build-and-push-base-images.yml/dispatches \
+            -d '{"ref": "main"}')
+          echo "$response"
+          echo "::set-output name=run_id::$(echo $response | jq -r .id)"
+
+      - name: Poll Workflow Status
+        if: ${{ github.event.inputs.rebuild == 'true' }}
+        run: |
+          RUN_ID=${{ steps.dispatch_workflow.outputs.run_id }}
+          echo "Polling workflow run ID: $RUN_ID"
+          while true; do
+            status=$(curl -s -H "Authorization: token ${{ secrets.DOCKER_PASSWORD }}" \
+              "https://api.github.com/repos/prasathmahendraraja/sre-base-image-builder/actions/runs/$RUN_ID" | jq -r .status)
+            echo "Current status: $status"
+            if [[ "$status" == "completed" ]]; then
+              echo "Workflow completed."
+              break
+            elif [[ "$status" == "failed" ]]; then
+              echo "Workflow failed."
+              exit 1
+            fi
+            sleep 10  # Wait for 10 seconds before polling again
+          done
+
+    #   - name: Pull Tag and Push Base Images To TD Registry
+    #     if: ${{ github.event.inputs.rebuild == 'true' }}
+    #     run: |
+    #       NODE_VERSIONS=("16" "24")
+
+    #       # Iterate over each Node.js version and initiate a pipeline if the rebuild image is selected manually.
+    #       for NODE_VERSION in "${NODE_VERSIONS[@]}"; do
+
+    #         if docker pull $DOCKERHUB_REGISTRY/prasathmahendraraja/alpine-node:$NODE_VERSION; then
+    #           docker tag $DOCKERHUB_REGISTRY/prasathmahendraraja/alpine-node:$NODE_VERSION $STAGING_REGISTRY/mahenp5/alpine-node:$NODE_VERSION
+    #           docker push $STAGING_REGISTRY/mahenp5/alpine-node:$NODE_VERSION
+    #         else
+    #           echo "Failed to pull alpine-node:$NODE_VERSION"
+    #           exit 1
+    #         fi
+
+    #         if docker pull $DOCKERHUB_REGISTRY/prasathmahendraraja/alpine-node-git:$NODE_VERSION; then
+    #           docker tag $DOCKERHUB_REGISTRY/prasathmahendraraja/alpine-node-git:$NODE_VERSION $STAGING_REGISTRY/mahenp5/alpine-node-git:$NODE_VERSION
+    #           docker push $STAGING_REGISTRY/mahenp5/alpine-node-git:$NODE_VERSION
+    #         else
+    #           echo "Failed to pull alpine-node-git:$NODE_VERSION"
+    #           exit 1
+    #         fi
+
+    #         if docker pull $DOCKERHUB_REGISTRY/prasathmahendraraja/alpine-node-java:$NODE_VERSION; then
+    #           docker tag $DOCKERHUB_REGISTRY/prasathmahendraraja/alpine-node-java:$NODE_VERSION $STAGING_REGISTRY/airdk2/alpine-node-java:$NODE_VERSION
+    #           docker push $STAGING_REGISTRY/airdk2/alpine-node-java:$NODE_VERSION
+    #         else
+    #           echo "Failed to pull alpine-node-java:$NODE_VERSION"
+    #           exit 1
+    #         fi
+
+    #         if docker pull $DOCKERHUB_REGISTRY/prasathmahendraraja/node:$NODE_VERSION-alpine-python3-sqlite3-chromedriver-git; then
+    #           docker tag $DOCKERHUB_REGISTRY/prasathmahendraraja/node:$NODE_VERSION-alpine-python3-sqlite3-chromedriver-git $STAGING_REGISTRY/node:$NODE_VERSION-alpine-python3-sqlite3-chromedriver-git
+    #           docker push $STAGING_REGISTRY/node:$NODE_VERSION-alpine-python3-sqlite3-chromedriver-git
+    #         else
+    #           echo "Failed to pull alpine-python3-sqlite3-chromedriver-git:$NODE_VERSION"
+    #           exit 1
+    #         fi
+            
+    #       done  
