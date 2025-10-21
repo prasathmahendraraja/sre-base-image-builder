@@ -1,4 +1,4 @@
-name: Build and Push New Runner Release
+name: Build and Push Base Image
 
 on:
   pull_request:
