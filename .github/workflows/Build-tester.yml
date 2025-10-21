@@ -20,7 +20,7 @@ jobs:
           #!/bin/sh
 
           # Set Source Docker registry and credentials
-          export DOCKERHUB_REGISTRY="dockerhub.registry.td.com"
+          export DOCKERHUB_REGISTRY="dockerhub.io"
 
           # Note this uses NPID
           export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
