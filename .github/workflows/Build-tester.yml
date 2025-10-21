@@ -28,7 +28,7 @@ jobs:
 
           # Login to both dockerhub and staging registry
           echo "$DOCKER_PASSWORD" | docker login "$DOCKERHUB_REGISTRY" -u "$DOCKER_USERNAME" --password-stdin
-        #   echo "$DOCKER_PASSWORD" | docker login "$STAGING_REGISTRY" -u "$DOCKER_USERNAME" --password-stdin
+          # echo "$DOCKER_PASSWORD" | docker login "$STAGING_REGISTRY" -u "$DOCKER_USERNAME" --password-stdin
 
       - name: Dispatch Public Github Workflow for Building Base Images
         id: dispatch_workflow
