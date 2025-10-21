@@ -6,7 +6,7 @@ on:
       rebuild:
         description: 'Rebuild Base Images'
         required: false
-        default: 'false'
+        default: false
         type: boolean
 
 jobs:
@@ -21,7 +21,6 @@ jobs:
 
           # Set Source Docker registry and credentials
           export DOCKERHUB_REGISTRY="dockerhub.registry.td.com"
-        #   export STAGING_REGISTRY="staging.registry.td.com"
 
           # Note this uses NPID
           export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
