@@ -6,13 +6,25 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs: 
+      id: 
+        description: 'run identifier'
+        required: false
 
 jobs:
   build:
     # if: github.event.pull_request.merged == true
     runs-on: [sre-runner]
+    outputs:
+      run_id: ${{ steps.workflow_id.outputs.id }}
     steps:
       - uses: actions/checkout@v3
+
+      - name: Workflow ID Provider
+        id: workflow_id
+        run: |
+          echo "run identifier: '${{ github.event.inputs.id }}'"
+          echo "id=${{ github.event.inputs.id }}" >> $GITHUB_OUTPUT    
       
       - name: Login to DockerHub
         uses: docker/login-action@v3
