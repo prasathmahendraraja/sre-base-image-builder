@@ -13,18 +13,12 @@ on:
 
 jobs:
   build:
-    # if: github.event.pull_request.merged == true
     runs-on: [sre-runner]
-    outputs:
-      run_id: ${{ steps.workflow_id.outputs.id }}
     steps:
-      - uses: actions/checkout@v3
+      - name: echo distinct ID ${{ github.event.inputs.id }}
+        run: echo ${{ github.event.inputs.id }}    
 
-      - name: Workflow ID Provider
-        id: workflow_id
-        run: |
-          echo "run identifier: '${{ github.event.inputs.id }}'"
-          echo "id=${{ github.event.inputs.id }}" >> $GITHUB_OUTPUT    
+      - uses: actions/checkout@v3
       
       - name: Login to DockerHub
         uses: docker/login-action@v3
@@ -37,7 +31,6 @@ jobs:
         uses: tj-actions/changed-files@v44
       
       - name: Build and Push Alpine-Node Images
-        # if: contains(steps.changes.outputs.all_changed_files, 'alpine-node')
         run: |
           cd alpine-node
           for NODE_VERSION in 16 24; do
@@ -46,7 +39,6 @@ jobs:
           done
 
       - name: Build and Push Alpine-Node-Git Images
-        # if: contains(steps.changes.outputs.all_changed_files, 'alpine-node-git')
         run: |
           cd alpine-node-git
           for NODE_VERSION in 16 24; do
@@ -55,7 +47,6 @@ jobs:
           done
       
       - name: Build and Push Alpine-Node-Java Base Image
-        # if: contains(steps.changes.outputs.all_changed_files, 'alpine-node-java')
         run: |
           cd alpine-node-java
           for NODE_VERSION in 16 24; do
@@ -64,7 +55,6 @@ jobs:
           done
 
       - name: Build and Push Node-alpine-python3-sqlite3-chromedriver-git Base Image
-        # if: contains(steps.changes.outputs.all_changed_files, 'node-alpine-python3-sqlite3-chromedriver-git')
         run: |
           cd node-alpine-python3-sqlite3-chromedriver-git
           for NODE_VERSION in 16 24; do
