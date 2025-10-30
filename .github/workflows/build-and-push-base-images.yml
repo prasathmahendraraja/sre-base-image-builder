@@ -7,16 +7,16 @@ on:
       - main
   workflow_dispatch:
     inputs: 
-      id: 
-        description: 'run identifier'
+      trigger_id: 
+        description: "Unique ID from parent workflow"
         required: false
 
 jobs:
   build:
     runs-on: [sre-runner]
     steps:
-      - name: echo distinct ID ${{ github.event.inputs.id }}
-        run: echo ${{ github.event.inputs.id }}    
+      - name: Print trigger info
+        run: echo "Running child workflow with trigger_id=${{ github.event.inputs.trigger_id }}"
 
       - uses: actions/checkout@v3
       
@@ -61,3 +61,8 @@ jobs:
             sh build.sh $NODE_VERSION
             docker push prasathmahendraraja/node:$NODE_VERSION-alpine-python3-sqlite3-chromedriver-git
           done
+
+      - name: 
+        run: |
+          sleep 10
+          echo "Completed work for trigger_id=${{ github.event.inputs.trigger_id }}"
