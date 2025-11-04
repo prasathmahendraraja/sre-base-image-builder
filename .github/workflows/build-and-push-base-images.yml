@@ -7,16 +7,16 @@ on:
       - main
   workflow_dispatch:
     inputs: 
-      trigger_id: 
-        description: "Unique ID from parent workflow"
+      id: 
+        description: 'run identifier'
         required: false
 
 jobs:
   build:
     runs-on: [sre-runner]
     steps:
-      - name: Print trigger info
-        run: echo "Running child workflow with trigger_id=${{ github.event.inputs.trigger_id }}"
+      - name: echo distinct ID ${{ github.event.inputs.id }}
+        run: echo ${{ github.event.inputs.id }}    
 
       - uses: actions/checkout@v3
       
@@ -69,8 +69,3 @@ jobs:
             sh build.sh $NODE_VERSION
             docker push prasathmahendraraja/jnlp:$NODE_VERSION
           done
-
-      - name: 
-        run: |
-          sleep 10
-          echo "Completed work for trigger_id=${{ github.event.inputs.trigger_id }}"
