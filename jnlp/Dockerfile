@@ -1,6 +1,6 @@
 ARG NODE_VERSION
 
-FROM prasathmahendraraja/alpine-node-java::${NODE_VERSION}
+FROM prasathmahendraraja/alpine-node-java:${NODE_VERSION}
 
 USER root
 
