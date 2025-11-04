@@ -7,7 +7,6 @@ USER root
 RUN apk add --update git
 RUN apk add --update curl
 RUN apk add --update --no-cache python3 py3-pip
-RUN apk add --update --no-cache python2
 RUN apk add --update docker openrc
 RUN rc-update add docker boot
 
