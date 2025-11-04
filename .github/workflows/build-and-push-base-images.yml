@@ -61,3 +61,11 @@ jobs:
             sh build.sh $NODE_VERSION
             docker push prasathmahendraraja/node:$NODE_VERSION-alpine-python3-sqlite3-chromedriver-git
           done
+
+      - name: Build and Push JNLP Base Image
+        run: |
+          cd jnlp
+          for NODE_VERSION in 16 24; do
+            sh build.sh $NODE_VERSION
+            docker push prasathmahendraraja/jnlp:$NODE_VERSION
+          done
