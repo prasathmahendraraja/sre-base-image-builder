@@ -69,3 +69,11 @@ jobs:
             sh build.sh $NODE_VERSION
             docker push prasathmahendraraja/jnlp:$NODE_VERSION
           done
+
+      - name: Build and Push Alpine-Node-Java17 Base Image
+        run: |
+          cd alpine-node-java17
+          for NODE_VERSION in 16 24; do
+            sh build.sh $NODE_VERSION
+            docker push prasathmahendraraja/alpine-node-java17:$NODE_VERSION
+          done          
