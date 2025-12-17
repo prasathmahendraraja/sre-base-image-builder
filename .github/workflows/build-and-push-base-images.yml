@@ -6,9 +6,9 @@ on:
     branches:
       - main
   workflow_dispatch:
-    inputs: 
-      id: 
-        description: 'run identifier'
+    inputs:
+      id:
+        description: "run identifier"
         required: false
 
 jobs:
@@ -16,10 +16,10 @@ jobs:
     runs-on: [sre-runner]
     steps:
       - name: echo distinct ID ${{ github.event.inputs.id }}
-        run: echo ${{ github.event.inputs.id }}    
+        run: echo ${{ github.event.inputs.id }}
 
       - uses: actions/checkout@v3
-      
+
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
@@ -29,7 +29,7 @@ jobs:
       - name: Get changed files
         id: changes
         uses: tj-actions/changed-files@v44
-      
+
       - name: Build and Push Alpine-Node Images
         run: |
           cd alpine-node
@@ -45,7 +45,7 @@ jobs:
             sh build.sh $NODE_VERSION
             docker push prasathmahendraraja/alpine-node-git:$NODE_VERSION
           done
-      
+
       - name: Build and Push Alpine-Node-Java Base Image
         run: |
           cd alpine-node-java
@@ -76,8 +76,7 @@ jobs:
           for NODE_VERSION in 16 24; do
             sh build.sh $NODE_VERSION
             docker push prasathmahendraraja/alpine-node-java17:$NODE_VERSION
-          done          
-	  
+          done
 
       - name: Build and Push dotnet6-node16-edge-ubuntu20 Base Image
         run: |
