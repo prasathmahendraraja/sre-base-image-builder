@@ -78,11 +78,11 @@ jobs:
             docker push prasathmahendraraja/alpine-node-java17:$NODE_VERSION
           done
 
-      - name: Build and Push dotnet6-node24-edge-ubuntu20 Base Image
+      - name: Build and Push dotnet9-node24-edge-ubuntu24 Base Image
         run: |
-          cd dotnet6-node24-edge-ubuntu20
+          cd dotnet9-node24-edge-ubuntu24
           sh build.sh
-          docker push prasathmahendraraja/dotnet6-node24-edge-ubuntu20
+          docker push prasathmahendraraja/dotnet9-node24-edge-ubuntu24
 
       - name: Build and Push phantomjs-debian-2.1.1 Base Image
         run: |
